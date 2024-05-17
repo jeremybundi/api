@@ -1,18 +1,14 @@
 <?php
 use Phalcon\Mvc\Model;
 
-class Users extends Model
+class Roles extends Model
 {
     public $id;
     public $name;
-    public $email;
-    public $phone;
-    public $username;
-    public $password;
 
     public function initialize()
     {
-        $this->setSource('users');
+        $this->setSource('roles');
         // Define relationships (if needed)
         // ...
     }
