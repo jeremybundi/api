@@ -9,7 +9,8 @@ class Roles extends Model
     public function initialize()
     {
         $this->setSource('roles');
-        // Define relationships (if needed)
-        // ...
+
+
+        $this->hasMany('id', 'UserRoles', 'role_id');
     }
 }

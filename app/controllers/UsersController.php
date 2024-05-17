@@ -8,9 +8,6 @@ class UsersController extends Controller
     private function setResponseHeaders(Response $response)
     {
         $response->setHeader('Access-Control-Allow-Origin', '*');
-        //$response->setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-        //$response->setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        //$response->setHeader('Access-Control-Allow-Credentials', 'true');
         $response->setContentType('application/json', 'utf-8');
     }
 
@@ -21,15 +18,12 @@ class UsersController extends Controller
 
         // Set headers
         $this->setResponseHeaders($response);
-
-        // Data validation
         if (!isset($requestData->name) || !isset($requestData->email)) {
             $response->setStatusCode(422, 'Unprocessable Entity');
             $response->setJsonContent(["error" => "Name and email are required"]);
             return $response;
         }
 
-        // Create a new User
         $user = new Users();
         $user->name = $requestData->name;
         $user->phone = $requestData->phone;
@@ -38,6 +32,12 @@ class UsersController extends Controller
         $user->password = $this->security->hash($requestData->password);
 
         if ($user->save()) {
+            $userRole = new UserRoles();
+            $userRole->user_id = $user->id;
+            $userRole->role_id = 2; 
+            $userRole->save();         
+
+
             $response->setStatusCode(201, 'Created');
             $response->setJsonContent(["message" => "User added successfully"]);
         } else {
@@ -54,3 +54,12 @@ class UsersController extends Controller
         return $response->send();
     }
 }
+
+
+
+
+
+
+
+
+
