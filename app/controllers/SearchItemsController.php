@@ -1,47 +1,67 @@
 <?php
+
 use Phalcon\Mvc\Controller;
+use Phalcon\Http\Response;
 
-class SearchItemController extends Controller
+class SearchItemsController extends Controller
 {
-    public function indexAction()
+    private function handleCors()
     {
-        // Retrieve the search query from the request (e.g., $_GET['q'])
-        $searchQuery = $this->request->getQuery('q');
+        // Create a new response object
+        $response = new Response();
 
-        // Validate and sanitize the search query (e.g., prevent SQL injection)
+        // Set CORS headers
+        $response->setHeader('Access-Control-Allow-Origin', '*');
+        $response->setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        $response->setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+        $response->setHeader('Access-Control-Allow-Credentials', 'true');
 
-        // Query the database to find items matching the search query
-        $items = $this->searchItemsInDatabase($searchQuery);
-
-        if (!empty($items)) {
-            // Items found: Return success response with item details
-            $this->response->setJsonContent([
-                'success' => true,
-                'message' => 'Items found',
-                'items' => $items,
-            ]);
-        } else {
-            // No items found: Return failure response
-            $this->response->setJsonContent([
-                'success' => false,
-                'message' => 'No items found',
-            ]);
-        }
-
-        // Disable view rendering
-        $this->view->disable();
+        return $response;
     }
 
-    // Additional actions (e.g., advanced search, autocomplete) can be added here
-    // ...
-
-    private function searchItemsInDatabase($searchQuery)
+    public function indexAction()
     {
-        // Implement your database query logic here
-        // Example: SELECT id, item_name, item_url, details, price FROM items WHERE item_name LIKE '%searchQuery%'
+        $itemName = $this->request->getQuery('item_name');
 
-        // For demonstration purposes, let's return an empty array
-        // Replace this with your actual database query results
-        return [];
+        // Validate item_name (optional)
+        if (empty($itemName)) {
+            $response = $this->handleCors();
+            $response->setStatusCode(400, 'Bad Request');
+            $response->setJsonContent(["status" => false, "message" => "Missing item_name"]);
+            return $response;
+        }
+    
+
+        // Search for items by item_name
+        $itemsModel = new Items();
+        $searchResults = $itemsModel->find([
+            "conditions" => "item_name LIKE :item_name:",
+            "bind" => ["item_name" => "%$itemName%"],
+        ]);
+
+        if (empty($searchResults)) {
+            $response = $this->handleCors();
+            $response->setStatusCode(404, 'Not Found');
+            $response->setJsonContent(["status" => false, "message" => "No items found"]);
+            return $response;
+        }
+
+        $itemData = [];
+        foreach ($searchResults as $item) {
+            $itemData[] = [
+                "id" => $item->id,
+                "item_name" => $item->item_name,
+                "item_url" => $item->item_url,
+                "details" => $item->details,
+                "price" => $item->price,
+            ];
+        }
+
+        $response = $this->handleCors();
+        $response->setStatusCode(200, 'OK');
+        $response->setContentType('application/json');
+        $response->setJsonContent(["status" => true, "data" => $itemData]);
+
+        return $response;
     }
 }

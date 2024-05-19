@@ -20,6 +20,14 @@ $router->add(
         'action' => 'create',
     ]
 );
+  //search items
+$router->add(
+    '/search',
+    [
+        'controller' => 'searchitems',
+        'action' => 'index',
+    ]
+);
 
 //post users
 $router->add(
