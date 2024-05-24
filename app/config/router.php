@@ -20,15 +20,21 @@ $router->add(
         'action' => 'create',
     ]
 );
-  //search items
+  //search items by name
 $router->add(
-    '/search',
+    '/search/{itemName}',
     [
         'controller' => 'searchitems',
-        'action' => 'index',
+        'action' => 'search',
     ]
 );
-
+$router->add(
+    '/items/search/{subcategoryId}',
+     [
+        'controller' => 'items',
+        'action' => 'search',
+     ]
+    );
 //post users
 $router->add(
     '/users/register',
