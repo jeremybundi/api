@@ -11,7 +11,7 @@ class OrderItems extends Model
 
     public function initialize()
     {
-        $this->setSource('order_items'); // Set the table name
+        $this->setSource('order_items'); 
         $this->belongsTo('orderId', 'Orders', 'id', [
             'alias' => 'order'
         ]);

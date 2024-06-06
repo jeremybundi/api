@@ -71,7 +71,7 @@ class OrdersController extends ControllerBase
         // Remove the keys so that the array is reindexed
         $ordersArray = array_values($ordersArray);
     
-        // Return the response in JSON format
+        
         $this->response->setJsonContent($ordersArray);
         return $this->response;
     }
@@ -85,18 +85,17 @@ class OrdersController extends ControllerBase
             $orderData = $this->request->getJsonRawBody();
             $order = new Orders();
 
-            // Assign fields to the order model
+            
             $order->customerName = $orderData->customerName;
             $order->phoneNumber = $orderData->phoneNumber;
             $order->deliveryAddress = $orderData->deliveryAddress;
             $order->paymentMethod = $orderData->paymentMethod;
             $order->totalPrice = $orderData->totalPrice;
 
-            // Begin transaction
+           
             $this->db->begin();
 
             if ($order->save()) {
-                // Save each order item
                 foreach ($orderData->items as $itemData) {
                     $orderItem = new OrderItems();
                     $orderItem->orderId = $order->id;
@@ -104,9 +103,7 @@ class OrdersController extends ControllerBase
                     $orderItem->quantity = $itemData->quantity;
 
                     if (!$orderItem->save()) {
-                        // Rollback transaction if an item fails to save
                         $this->db->rollback();
-                        // Handle errors
                         $errors = [];
                         foreach ($orderItem->getMessages() as $message) {
                             $errors[] = $message->getMessage();
@@ -120,7 +117,6 @@ class OrdersController extends ControllerBase
                     }
                 }
 
-                // Commit transaction
                 $this->db->commit();
 
                 $response->setJsonContent([
@@ -128,7 +124,6 @@ class OrdersController extends ControllerBase
                     'message' => 'Order and order items have been created successfully'
                 ]);
             } else {
-                // Handle errors
                 $errors = [];
                 foreach ($order->getMessages() as $message) {
                     $errors[] = $message->getMessage();

@@ -21,13 +21,15 @@ $router->add(
     ]
 );
   //search items by name
-$router->add(
-    '/search/{itemName}',
+  $router->add(
+    '/search/{item_name}',
     [
-        'controller' => 'searchitems',
-        'action' => 'search',
+        'controller' => 'Search',
+        'action' => 'index',
+        'item_name' => 1, // Positional parameter
     ]
 );
+//search by category
 $router->add(
     '/items/search/{subcategoryId}',
      [

@@ -14,7 +14,7 @@ class Orders extends Model
 
     public function initialize()
     {
-        $this->setSource('orders'); // Set the table name
+        $this->setSource('orders');
         $this->hasMany('id', 'OrderItems', 'orderId', [
             'alias' => 'items'
         ]);
@@ -22,7 +22,7 @@ class Orders extends Model
 
     public function beforeCreate()
     {
-        // Set the creation date
+   
         $this->createdAt = date('Y-m-d H:i:s');
     }
 }

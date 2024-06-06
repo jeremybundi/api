@@ -12,7 +12,6 @@ class Items extends Model
     public $category_id;
     public $subcategory_id;
 
-    // Define relationships (optional)
     public function category()
     {
         return $this->belongsTo(
@@ -32,18 +31,9 @@ class Items extends Model
         );
     }
 
-    // Retrieve all items (optional)
     public static function getAllItems()
     {
         return self::find();
     }
 
-    // Retrieve items by item_name (optional)
-    public static function findItemsByName(string $itemName)
-    {
-        return self::find([
-            'conditions' => 'item_name = :item_name:',
-            'bind' => ['item_name' => $itemName],
-        ]);
-    }
 }
