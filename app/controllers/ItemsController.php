@@ -74,7 +74,30 @@ class ItemsController extends Controller
 
         return $response;
     }
-
+      
+    //search by id
+    public function postAction($id)
+    {
+        {
+            $itemId = $this->dispatcher->getParam('id');
+            
+            $item = Items::findFirst([
+                'conditions' => 'id = :id:',
+                'bind' => ['id' => $itemId],
+            ]);
+    
+            if ($item) {
+                $this->response->setJsonContent(['item' => $item]);
+            } else {
+                $this->response->setStatusCode(404, 'Item not found');
+            }
+    
+            $this->view->disable();
+    
+            $this->response->send();
+        }
+    }
+     //create items
     public function createAction()
     {
         $response = new Response();

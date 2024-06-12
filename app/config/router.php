@@ -37,6 +37,15 @@ $router->add(
         'action' => 'search',
      ]
     );
+
+    //search by id
+    $router->add(
+        '/items/id/{id:[0-9]+}', 
+        [
+          'controller' => 'items',
+          'action' => 'post',
+        ]
+      );
 //post users
 $router->add(
     '/users/register',
