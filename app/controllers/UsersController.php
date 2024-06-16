@@ -34,7 +34,7 @@ class UsersController extends Controller
         if ($user->save()) {
             $userRole = new UserRoles();
             $userRole->user_id = $user->id;
-            $userRole->role_id = 2; 
+            $userRole->role_id = 1; 
             $userRole->save();         
 
 

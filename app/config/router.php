@@ -80,5 +80,20 @@ $router->add(
         'action' => 'index',
     ]
 );
-
+//get roles with name
+$router->add(
+    '/roles/get',
+    [
+        'controller' => 'updateroles',
+        'action' => 'getUsersWithRoles',
+    ]
+);
+//update roles
+$router->add(
+    '/roles/update',
+    [
+        'controller' => 'updateroles',
+        'action' => 'updateUserRole',
+    ]
+);
 $router->handle($_SERVER['REQUEST_URI']);
