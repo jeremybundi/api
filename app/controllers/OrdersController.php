@@ -11,7 +11,7 @@ class OrdersController extends ControllerBase
         $orderNumber = $this->request->getQuery('orderNumber', 'int');
         $startDate = $this->request->getQuery('startDate');
     
-        // Create the base query
+      
         $query = Orders::query()
             ->columns([
                 'Orders.id',
@@ -39,13 +39,13 @@ class OrdersController extends ControllerBase
             $query->andWhere('Orders.createdAt >= :startDate:', ['startDate' => $startDate]);
         }
     
-        // Execute the query
+      
         $orders = $query->execute();
     
         $ordersArray = [];
     
         foreach ($orders as $order) {
-            // Check if the order ID already exists in the array
+         
             if (!isset($ordersArray[$order->id])) {
                 $ordersArray[$order->id] = [
                     'id' => $order->id,
@@ -59,7 +59,7 @@ class OrdersController extends ControllerBase
                 ];
             }
     
-            // Append the item to the items array of the order
+            
             $ordersArray[$order->id]['items'][] = [
                 'item_url' => $order->item_url,
                 'item_name'=> $order->item_name,
@@ -68,7 +68,7 @@ class OrdersController extends ControllerBase
             ];
         }
          
-        // Remove the keys so that the array is reindexed
+      
         $ordersArray = array_values($ordersArray);
     
         

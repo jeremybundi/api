@@ -80,9 +80,17 @@ $router->add(
         'action' => 'index',
     ]
 );
+//get all users
+$router->add(
+    '/roles',
+    [
+        'controller' => 'updateroles',
+        'action' => 'getUsersAllRoles',
+    ]
+);
 //get roles with name
 $router->add(
-    '/roles/get',
+    '/roles/get/{name}',
     [
         'controller' => 'updateroles',
         'action' => 'getUsersWithRoles',
