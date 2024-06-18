@@ -26,7 +26,7 @@ $router->add(
     [
         'controller' => 'Search',
         'action' => 'index',
-        'item_name' => 1, // Positional parameter
+        'item_name' => 1, 
     ]
 );
 //search by category
