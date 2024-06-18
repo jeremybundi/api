@@ -96,12 +96,13 @@ $router->add(
         'action' => 'getUsersWithRoles',
     ]
 );
-//update roles
 $router->add(
-    '/roles/update',
+    '/roles/update/:int/:int', 
     [
         'controller' => 'updateroles',
-        'action' => 'updateUserRole',
+        'action'     => 'updateUserRole',
+        'user_id'    => 1, 
+        'role_id'    => 2, 
     ]
 );
 $router->handle($_SERVER['REQUEST_URI']);

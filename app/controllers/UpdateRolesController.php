@@ -51,37 +51,41 @@ class UpdateRolesController extends Controller
        }
        
        
-   // Method to update 
-   public function updateUserRoleAction()
-   {
-       $response = $this->handleCors();
-       
-       $user_id = (int) $this->request->getPost('user_id');
-       $new_role_id = (int) $this->request->getPost('role_id');
+            // Method to update 
+        public function updateUserRoleAction($user_id, $new_role_id)
+        {
+            $response = new Response();
 
-       $userRole = UserRoles::findFirst([
-           'conditions' => 'user_id = :user_id:',
-           'bind'       => ['user_id' => $user_id]
-       ]);
+            try {
+              
+                $userRole = UserRoles::findFirst([
+                    'conditions' => 'user_id = :user_id:',
+                    'bind'       => ['user_id' => $user_id]
+                ]);
 
-       if ($userRole) {
-           $userRole->role_id = $new_role_id;
-           if ($userRole->save()) {
-           
-               $response->setJsonContent(['message' => 'Role updated successfully']);
-           } else {
-               
-               $errors = [];
-               foreach ($userRole->getMessages() as $message) {
-                   $errors[] = $message->getMessage();
-               }
-               $response->setJsonContent(['message' => 'Failed to update role', 'errors' => $errors]);
-           }
-       } else {
+                if ($userRole) {
+                  
+                    $userRole->role_id = $new_role_id;
+                    if ($userRole->update()) {
+                   
+                        $response->setStatusCode(200, "OK");
+                        $response->setJsonContent(["status" => "success", "message" => "User role updated successfully."]);
+                    } else {
+                  
+                        $response->setStatusCode(409, "Conflict");
+                        $response->setJsonContent(["status" => "error", "message" => "Failed to update user role."]);
+                    }
+                } else {
+                
+                    $response->setStatusCode(404, "Not Found");
+                    $response->setJsonContent(["status" => "error", "message" => "User role entry not found."]);
+                }
+            } catch (\Exception $e) {
 
-           $response->setJsonContent(['message' => 'User role not found']);
-       }
+                $response->setStatusCode(500, "Internal Server Error");
+                $response->setJsonContent(["status" => "error", "message" => $e->getMessage()]);
+            }
 
-       return $response;
-   }
-}
+            return $response;
+        }
+ }
