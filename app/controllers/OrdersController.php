@@ -86,6 +86,19 @@ class OrdersController extends ControllerBase
             $order = new Orders();
 
             
+        $phoneNumber = $orderData->phoneNumber;
+        if (!preg_match('/^\d{10}$/', $phoneNumber)) {
+            $errors[] = 'Phone number must be 10 digits long.';
+           
+        }
+
+        $customerName = $orderData->customerName;
+        if (!preg_match('/^[A-Za-z]+$/', $customerName)) {
+            $errors[] = 'Customer name should only contain letters.';
+           
+        }
+
+            
             $order->customerName = $orderData->customerName;
             $order->phoneNumber = $orderData->phoneNumber;
             $order->deliveryAddress = $orderData->deliveryAddress;

@@ -2,6 +2,11 @@
 <?php
 use Phalcon\Mvc\Controller;
 use Phalcon\Http\Response;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Url as UrlValidator;
+use Phalcon\Validation\Validator\Regex as RegexValidator;
+use Phalcon\Validation\Validator\Numericality;
 
 class ItemsController extends Controller
 {
@@ -98,18 +103,68 @@ class ItemsController extends Controller
         }
     }
      //create items
-    public function createAction()
-    {
-        $response = new Response();
-        $response = $this->handleCors($response);
-        $requestData = $this->request->getJsonRawBody();
-
-      
-        if (!isset($requestData->item_name) || !isset($requestData->price)) {
-            $response->setStatusCode(400); 
-            $response->setJsonContent(["error" => "Invalid data"]);
-            return $response;
-        }
+     public function createAction()
+     {
+         $response = new Response();
+         $response = $this->handleCors($response);
+         $requestData = $this->request->getJsonRawBody();
+ 
+         // Validation
+         $validator = new Validation();
+         
+         $validator->add(
+             'item_name',
+             new PresenceOf(['message' => 'The item name is required.'])
+         );
+         $validator->add(
+             'item_name',
+             new RegexValidator([
+                 'pattern' => '/^[a-zA-Z\s]+$/',
+                 'message' => 'The item name must contain only letters.'
+             ])
+         );
+         
+         $validator->add(
+             'item_url',
+             new PresenceOf(['message' => 'The item URL is required.'])
+         );
+         $validator->add(
+             'item_url',
+             new UrlValidator(['message' => 'The item URL must be a valid URL.'])
+         );
+       
+         $validator->add(
+             'details',
+             new PresenceOf(['message' => 'The details are required.'])
+         );
+         $validator->add(
+             'details',
+             new RegexValidator([
+                 'pattern' => '/^[a-zA-Z\s]+$/',
+                 'message' => 'The item name must contain only letters.'
+             ])
+         );
+ 
+         $validator->add(
+             'price',
+             new PresenceOf(['message' => 'The price is required.'])
+         );
+         $validator->add(
+             'price',
+             new Numericality(['message' => 'The price must be a number.'])
+         );
+ 
+         $messages = $validator->validate($requestData);
+         
+         if (count($messages)) {
+             foreach ($messages as $message) {
+                 $validationErrors[$message->getField()] = $message->getMessage();
+             }
+             
+             $response->setStatusCode(400);
+             $response->setJsonContent(["errors" => $validationErrors]);
+             return $response;
+         }
 
         $newItem = new Items();
         $newItem->item_name = $requestData->item_name;

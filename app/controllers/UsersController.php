@@ -83,8 +83,7 @@ class UsersController extends Controller
             $response->setJsonContent(["errors" => $errors]);
             return $response;
         }
-
-
+        
         $user = new Users();
         $user->name = $requestData->name;
         $user->phone = $requestData->phone;
