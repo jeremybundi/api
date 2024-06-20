@@ -106,4 +106,13 @@ $router->add(
         'role_id'    => 2, 
     ]
 );
+//delete users
+$router->add(
+    '/users/delete/{userId}',
+    [
+        'controller' => 'updateroles',
+        'action' => 'deleteUser',
+    ]
+);
+
 $router->handle($_SERVER['REQUEST_URI']);

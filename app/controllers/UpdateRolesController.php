@@ -90,4 +90,28 @@ class UpdateRolesController extends Controller
 
             return $response;
         }
+
+        //delete users
+        public function deleteUserAction($userId)
+        {
+            $userRoles = UserRoles::find([
+                'user_id = :userId:',
+                'bind' => ['userId' => $userId],
+            ]);
+        
+            
+            foreach ($userRoles as $userRole) {
+                $userRole->delete();
+            }
+        
+            $user = Users::findFirstById($userId);
+            if ($user) {
+                $user->delete();
+                
+                return $this->response->setJsonContent(['message' => 'User and associated roles deleted successfully']);
+            } else {
+                return $this->response->setJsonContent(['error' => 'User not found']);
+            }
+        }
+        
  }
