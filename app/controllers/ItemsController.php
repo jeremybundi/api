@@ -119,8 +119,8 @@ class ItemsController extends Controller
          $validator->add(
              'item_name',
              new RegexValidator([
-                 'pattern' => '/^[a-zA-Z\s]+$/',
-                 'message' => 'The item name must contain only letters.'
+                 'pattern' => '/^[a-zA-Z\s\'-.]+$/',
+                'message' => 'The item name must contain only letters, hyphens, or apostrophes.'
              ])
          );
          
@@ -140,8 +140,8 @@ class ItemsController extends Controller
          $validator->add(
              'details',
              new RegexValidator([
-                 'pattern' => '/^[a-zA-Z\s]+$/',
-                 'message' => 'The item name must contain only letters.'
+                'pattern' => '/^[a-zA-Z\s\'-.]+$/',
+                 'message' => 'The item name must contain only letters, hyphens, fullstop or apostrophes.'
              ])
          );
  
