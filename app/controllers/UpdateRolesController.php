@@ -33,14 +33,16 @@ class UpdateRolesController extends Controller
        public function getUsersWithRolesAction($name = null)
        {
            $response = $this->handleCors();
-           
-          
+       
+           var_dump($name);
+       
            $query = Users::query()
-           ->columns(['Users.id', 'Users.name','Users.username','Users.email', 'UserRoles.role_id'])
-           ->join('UserRoles', 'UserRoles.user_id = Users.id');
+               ->columns(['Users.id', 'Users.name', 'Users.username', 'Users.email', 'UserRoles.role_id'])
+               ->join('UserRoles', 'UserRoles.user_id = Users.id');
        
            if ($name) {
-               $query->where('Users.name = :name:', ['name' => $name]);
+               
+               $query->where('LOWER(Users.name) LIKE :name:', ['name' => '%' . strtolower($name) . '%']);
            }
        
            $users = $query->execute();

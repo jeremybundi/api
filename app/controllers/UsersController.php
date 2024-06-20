@@ -19,13 +19,11 @@ class UsersController extends Controller
         $requestData = $this->request->getJsonRawBody();
         $response = new Response();
 
-        // Set headers
         $this->setResponseHeaders($response);
 
-         // Validation setup
+      
     $validation = new Validation();
 
-    // Name validation
     $validation->add(
         'name',
         new RegexValidator([
@@ -34,7 +32,7 @@ class UsersController extends Controller
         ])
     );
 
-        // Email validation
+        
         $validation->add(
             'email',
             new EmailValidator([
@@ -42,7 +40,6 @@ class UsersController extends Controller
             ])
         );
 
-        // Phone validation
         $validation->add(
             'phone',
             new RegexValidator([
@@ -51,7 +48,6 @@ class UsersController extends Controller
             ])
         );
 
-        // Username validation
         $validation->add(
             'username',
             new RegexValidator([
@@ -60,7 +56,6 @@ class UsersController extends Controller
             ])
         );
 
-        // Password validation
         $validation->add(
             'password',
             new RegexValidator([
@@ -69,11 +64,9 @@ class UsersController extends Controller
             ])
         );
 
-        // Validate request data
         $messages = $validation->validate($requestData);
 
         if (count($messages)) {
-            // Handle errors
             $errors = [];
             foreach ($messages as $message) {
                 $errors[$message->getField()] = $message->getMessage();
@@ -94,7 +87,7 @@ class UsersController extends Controller
         if ($user->save()) {
             $userRole = new UserRoles();
             $userRole->user_id = $user->id;
-            $userRole->role_id = 1; 
+            $userRole->role_id = 2; 
             $userRole->save();         
 
 
